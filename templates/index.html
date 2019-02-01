@@ -1,0 +1,31 @@
+﻿{% extends "base.html" %}
+{% block title %} eParking System {% endblock %}
+
+{% block wide_container %}
+
+<div class="page-content--bge5">
+    <div class="container">
+        <div class="login-wrap">
+            <div class="login-content">
+                <div class="login-logo">
+                    <h1>
+                        <a href="#">
+                            eParking System
+                        </a>
+                    </h1>
+                </div>
+
+                <h5 class="text-center">Choose one option :</h5>
+                <br />
+                <div class="row" >
+
+                    <div class="col-lg-4 text-center"><a href="{{ url_for('backoffice') }}">Employee</a></div>
+                    <div class="col-lg-4 text-center"><a href="{{ url_for('agency_panel') }}">Agency</a></div>
+                    <div class="col-lg-4 text-center"><a href="{{ url_for('customer') }}">Online Customer</a></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+ {% endblock %}

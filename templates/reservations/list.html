@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %} Reservations {% endblock %}
+
+{% block wide_container %}
+
+{% include "sidebar.html" %}
+
+
+<div class="page-container">
+    {% include "header.html" %}
+
+
+    <div class="main-content">
+
+
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h2 class="title-1 m-b-25">Reservations</h2>
+                        {% if errorString %}
+                        <div class="alert alert-danger" role="alert">
+                            {{errorString|e}}
+                        </div>
+                        {% endif %}
+                        <div class="table-responsive table--no-card m-b-40">
+                            <table class="table table-borderless table-data3">
+                                <thead>
+                                    <tr>
+                                        <th>Parking</th>
+                                        <th>Dates</th>
+
+                                        <th>User</th>
+                                        <th>
+                                            {% if userType == 'employee' -%}
+                                            Agency
+                                            {% elif userType == 'agency' -%}
+                                            You Earn
+                                            {% endif %}
+                                        </th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for element in reservationList %}
+                                    <tr>
+                                        <td>{{ element.parkingName|e }}</td>
+                                        <td><i class="fa fa-arrow-right"></i> {{ element.fromDate.strftime('%d/%m/%Y %H:%M')  }} <br /><i class="fa fa-arrow-left"></i> {{ element.toDate.strftime('%d/%m/%Y %H:%M') }}</td>
+
+                                        <td>{{ element.user.name|e }} {{ element.user.surname|e }}</td>
+                                        <td>
+                                            {% if userType == 'employee' -%}
+                                            {{ element.agencyCompanyName[0]|e }}
+                                            {% elif userType == 'agency' -%}
+                                            € {{ element.agencyProfit|e }}
+                                            {% endif %}
+                                        </td>
+                                        <td>€ {{ element.amount|e }}</td>
+                                        <td>{{ element.status|e }}</td>
+                                        <td>
+                                            {% if element.status == 'CONFIRMED' %}
+
+                                            {% if userType == 'employee' -%}
+                                            <a class="btn btn-warning" style="padding:0px 5px" href="{{ url_for('reservations', action='edit',resourceId=element._id) -}}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+
+                                            <a class="btn btn-danger" style="padding:0px 5px" href="{{ url_for('reservations', action='delete',resourceId=element._id) -}}" onClick="return confirm('Are you sure?');">
+                                                <i class="fa fa-remove"></i>
+                                            </a>
+                                            {% elif userType == 'agency' -%}
+                                            <a class="btn btn-warning" style="padding:0px 5px" href="{{ url_for('agency_reservations', action='edit',resourceId=element._id) -}}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+
+                                            <a class="btn btn-danger" style="padding:0px 5px" href="{{ url_for('agency_reservations', action='delete',resourceId=element._id) -}}" onClick="return confirm('Are you sure?');">
+                                                <i class="fa fa-remove"></i>
+                                            </a>
+                                            {% endif -%}
+
+
+
+                                            {% else %}
+                                            -
+                                            {% endif %}
+
+
+
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr><td align="center" colspan="7">No reservations found</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+        {% endblock %}
+

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %} Well done {% endblock %}
+
+{% block wide_container %}
+
+<div class="page-content--bge5">
+    <div class="container">
+        <div class="login-wrap">
+            <div class="login-content">
+                {% if action == 'success' %}
+                Everything ok! <a href="{{url_for('customer')}}">Go Back</a>
+                {% else %}
+                Error!<a href="{{url_for('customer')}}">Go Back</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+ {% endblock %}

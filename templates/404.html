@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %} Error! {% endblock %}
+
+{% block wide_container %}
+
+<div class="page-content--bge5">
+    <div class="container">
+        <div class="login-wrap">
+            <div class="login-content">
+                <div class="login-logo">
+                    <a href="#">
+                        <img src="{{ url_for('static', filename='assets/images/icon/logo.png') }}">
+                    </a>
+                </div>
+                <h1 style="text-align:center">Oooops!</h1><br />
+                <div class="alert alert-danger" role="alert">
+                    {% if errorString %}
+                    {{errorString|e}}
+                    {% else %}
+                    Some error occurred
+                    {% endif %}
+                </div>
+                
+                <div class="login-form">
+                        
+                        <div class="login-checkbox">
+
+                            <label style ="margin:0 auto">
+                                <a  href="javascript:window.history.go(-1);">Go Back</a>
+                            </label>
+                        </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+ {% endblock %}

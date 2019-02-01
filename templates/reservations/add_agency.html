@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %} {{ pageTitle }} {% endblock %}
+
+{% block wide_container %}
+
+{% include "sidebar.html" %}
+
+
+<div class="page-container">
+	{% include "header.html" %}
+
+
+	<div class="main-content">
+
+
+		<div class="section__content section__content--p30">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-12">
+						{% if errorString %}
+						<div class="alert alert-danger" role="alert">
+							<h3>Oops! Some errors occurred</h3><br />
+							{% autoescape false %}
+							{{errorString|replace("|", "<br/>")}}
+							{% endautoescape %}
+						</div>
+						{% endif %}
+
+						<div class="card">
+							<div class="card-header">
+								{{ pageTitle }}
+							</div>
+							<div class="card-body card-block">
+								<form action="{% if action == 'add' -%} {{ url_for('agency_reservations', action='add') -}} {% else -%} {{ url_for('agency_reservations', action='edit',resourceId=resourceId) -}} {% endif -%}" method="post" autocomplete="off">
+									<input type="hidden" name="submit" value="1" />
+
+
+
+									<div class="form-row">
+										<div class="form-group col-lg-4">
+											<label for="nf-name" class=" form-control-label">Name</label>
+											<input type="text" value="{%if reservationData.user -%}{{ reservationData.user.name|e }}{% endif -%}" id="nf-name" name="name" placeholder="" class="form-control">
+										</div>
+										<div class="form-group col-lg-4">
+											<label for="nf-surname" class=" form-control-label">Surname</label>
+											<input type="text" value="{%if reservationData.user -%}{{ reservationData.user.surname|e }}{% endif -%}" id="nf-surname" name="surname" placeholder="" class="form-control">
+										</div>
+										<div class="form-group col-lg-4">
+											<label for="nf-email" class=" form-control-label">Email</label>
+											<input type="email" value="{%if reservationData.user -%}{{ reservationData.user.email|e }}{% endif -%}" id="nf-email" name="email" placeholder="" class="form-control">
+										</div>
+									</div>
+									<div class="form-row">
+										<div class="form-group col-lg-4">
+											<label for="nf-type" class=" form-control-label">Type</label>
+											<select name="type" id="nf-type" class="form-control-sm form-control">
+												<option value="car" {% if reservationData.user and reservationData.user.type=='car' -%} selected="selected" {% endif -%}>Car</option>
+												<option value="moto" {% if reservationData.user and reservationData.user.type=='moto' -%} selected="selected" {% endif -%}>Moto</option>
+											</select>
+										</div>
+										<div class="form-group col-lg-4">
+											<label for="nf-model" class=" form-control-label">Model</label>
+											<input type="text" value="{%if reservationData.user -%}{{ reservationData.user.model|e }}{% endif -%}" id="nf-model" name="model" placeholder="" class="form-control">
+										</div>
+										<div class="form-group col-lg-4">
+											<label for="nf-plate" class=" form-control-label">Plate</label>
+											<input type="text" value="{%if reservationData.user -%}{{ reservationData.user.plate|e }}{% endif -%}" id="nf-plate" name="plate" placeholder="" class="form-control">
+										</div>
+									</div>
+									<div class="form-row">
+
+										<div class="form-group col-lg-6">
+											<label for="nf-fromDate" class=" form-control-label">From Date</label>
+											<input type="text" value="{{ reservationData.fromDate|e }}" id="nf-fromDate" name="fromDate" placeholder="" class="form-control">
+										</div>
+										<div class="form-group col-lg-6">
+											<label for="nf-toDate" class=" form-control-label">To Date</label>
+											<input type="text" value="{{ reservationData.toDate|e }}" id="nf-toDate" name="toDate" placeholder="" class="form-control">
+										</div>
+
+
+
+									</div>
+
+									<div class="form-row">
+
+										<div class="form-group col-lg-4">
+											<label for="nf-parking" class=" form-control-label">Related Parking</label>
+											<select name="parking" id="nf-parking" class="form-control-sm form-control">
+
+												{% for parks in parkingList %}
+												<option value="{{ parks.id|string }}" {% if parks.id==reservationData.parking -%} selected="selected" {% endif -%}>{{ parks.name|e }}</option>
+												{% endfor %}
+
+											</select>
+										</div>
+
+
+
+										<div class="form-group col-lg-4">
+											<label for="nf-type" class=" form-control-label">Payment Type</label>
+											<select name="paymentType" id="nf-type" class="form-control-sm form-control">
+												<option value="online" {% if reservationData.paymentType=='online' -%} selected="selected" {% endif -%}>Online</option>
+												<option value="onsite" {% if reservationData.paymentType=='onsite' -%} selected="selected" {% endif -%}>Onsite</option>
+											</select>
+										</div>
+									</div>
+
+
+
+
+									{% if action == 'edit' %}
+									<div class="form-row">
+
+
+										<div class="form-group col-lg-6">
+											<label for="nf-amount" class=" form-control-label">Amount</label>
+											<input type="text" readonly value="€{{ reservationData.amount|e }}" id="nf-amount" name="amount" placeholder="" class="form-control">
+										</div>
+										<div class="form-group col-lg-6">
+											<label for="nf-agencyProfit" class=" form-control-label">Agency Profit</label>
+											<input type="text" readonly value="€{{ reservationData.agencyProfit|e }}" id="nf-agencyProfit" name="agencyProfit" placeholder="" class="form-control">
+										</div>
+
+									</div>
+							</div>
+							{% endif %}
+							<div class="card-footer">
+								<button type="submit" class="btn btn-primary btn-sm">
+									<i class="fa fa-dot-circle-o"></i> Submit
+								</button>
+								<button type="reset" class="btn btn-danger btn-sm">
+									<i class="fa fa-ban"></i> Reset
+								</button>
+							</div>
+							</form>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+
+</div>
+{% endblock %}

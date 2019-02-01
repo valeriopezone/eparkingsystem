@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %} Employees {% endblock %}
+
+{% block wide_container %}
+
+{% include "sidebar.html" %}
+
+
+<div class="page-container">
+    {% include "header.html" %}
+
+
+    <div class="main-content">
+
+
+        <div class="section__content section__content--p30">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h2 class="title-1 m-b-25">Agencies</h2>
+                        {% if errorString %}
+                        <div class="alert alert-danger" role="alert">
+                            <h3>Oops! Some errors occurred</h3><br />
+                            {% autoescape false %}
+                            {{errorString|replace("|", "<br/>")}}
+                            {% endautoescape %}
+                        </div>
+                        {% endif %}
+                        <div class="table-responsive table--no-card m-b-40">
+                            <table class="table table-borderless table-data3">
+                                <thead>
+                                    <tr>
+                                        <th>Company</th>
+                                        <th>Email</th>
+                                        <th>Profit</th>
+                                        <th>VAT</th>
+                                        <th>Active</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for element in agencyList %}
+                                    <tr>
+                                        <td>{{ element.companyName|e }}</td>
+                                        <td>{{ element.email|e }}</td>
+                                        <td>{{ element.profitRate|e }} %</td>
+                                        <td>{{ element.VAT|e }}</td>
+                                        <td>{{ "Yes" if element.active == 1 else "No" }}</td>
+                                        <td>
+                                            <a class="btn btn-warning" style="padding:0px 5px" href="{{ url_for('agencies', action='edit',resourceId=element.id) -}}">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+
+                                            <a class="btn btn-danger" style="padding:0px 5px" href="{{ url_for('agencies', action='delete',resourceId=element.id) -}}" onClick="return confirm('Are you sure?');">
+                                                <i class="fa fa-remove"></i>
+                                            </a>
+
+
+
+                                        </td>
+                                    </tr>
+                                    {% else %}
+                                    <tr><td align="center" colspan="6">No agencies found</td></tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+        {% endblock %}
+

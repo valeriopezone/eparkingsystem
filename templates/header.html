@@ -1,0 +1,77 @@
+<!-- HEADER DESKTOP-->
+<header class="header-desktop">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="header-wrap">
+                <form class="form-header" action="" method="POST">
+                   
+                </form>
+                <div class="header-button">
+                    <div class="noti-wrap">
+                    
+                  
+                    </div>
+                    <div class="account-wrap">
+                        <div class="account-item clearfix js-item-menu">
+                            <div class="image">
+                                
+                                <img src="{{ url_for('static', filename='assets/images/icon/avatar-01.jpg') }}" />
+                            </div>
+                            <div class="content">
+                                <a class="js-acc-btn" href="#">Hi, {% if userType == 'employee' -%}
+                                    {{ employee.name -}}
+                                    {% elif userType == 'agency' -%}
+                                    {{ agency.companyName -}}
+                                    {% endif -%}</a>
+                            </div>
+                            <div class="account-dropdown js-dropdown">
+                                <div class="info clearfix">
+                                    <div class="image">
+                                        <a href="#">
+                                            <img src="{{ url_for('static', filename='assets/images/icon/avatar-01.jpg') }}" />
+                                        </a>
+                                    </div>
+                                    <div class="content">
+                                        <h5 class="name">
+                                            <a href="#">
+                                                {% if userType == 'employee' -%}
+                                                {{ employee.name|e -}}
+                                                {% elif userType == 'agency' -%}
+                                                {{ agency.companyName|e -}}
+                                                {% endif -%}
+                                            </a>
+                                        </h5>
+                                        <span class="email">
+                                            {% if userType == 'employee' -%}
+                                            {{ employee.login|e -}}
+                                            {% elif userType == 'agency' -%}
+                                            {{ agency.email|e -}}
+                                            {% endif -%}
+                                        </span>
+                                    </div>
+                                </div>
+                                {% if userType == 'employee' -%}
+                                <div class="account-dropdown__body">
+                                    <div class="account-dropdown__item">
+
+                                        <a href="{{ url_for('employees', action='edit', resourceId=employee._id['$oid']) -}}">
+                                            <i class="zmdi zmdi-account"></i>Account
+                                        </a>
+                                    </div>
+
+
+                                </div>
+                                {% endif -%}
+                                <div class="account-dropdown__footer">
+                                    <a href="{{ url_for('logout', userType = userType) -}}">
+                                        <i class="zmdi zmdi-power"></i>Logout
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

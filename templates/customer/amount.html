@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %} Check payment amount {% endblock %}
+
+{% block wide_container %}
+
+<div class="page-content--bge5">
+    <div class="container">
+        <div class="login-wrap">
+            <div class="login-content">
+                <div class="login-content">
+                    <div class="login-logo">
+                        <a href="#">
+                            eParking System
+                        </a>
+                    </div>
+                    {% if errorString %}
+                    <div class="alert alert-danger" role="alert">
+                        <h3>Oops! Some errors occurred</h3><br />
+                        {% autoescape false %}
+                        {{errorString|replace("|", "<br/>")}}
+                        {% endautoescape %}
+                    </div>
+                    {% endif %}
+                    <form action=" {{ url_for('customer', action='step3') -}}" method="post" autocomplete="off">
+                        <input type="hidden" name="submit" value="1" />
+                        <h3>Amount to pay : € {{ reservation.amount|string }}</h3><br />
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-success btn-sm">
+                                <i class="fa fa-dot-circle-o"></i> Submit
+                            </button>
+                            <button type="button" onClick="javascript:window.history.go(-1);" class="btn btn-danger btn-sm">
+                                <i class="fa fa-dot-circle-o"></i> Go Back
+                            </button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+    </div>
+</div>
+
+
+ {% endblock %}
+
+{% block scripts %}
+$(document).ready(function(){
+
+});
+{% endblock %}

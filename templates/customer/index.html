@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %} Welcome customer {% endblock %}
+
+{% block wide_container %}
+
+<div class="page-content--bge5">
+    <div class="container">
+        <div class="login-wrap">
+            <div class="login-content">
+                <div class="login-logo">
+                <a href="#">
+                    eParking System
+                </a>
+            </div>
+                {% if errorString %}
+                <div class="alert alert-danger" role="alert">
+                    <h3>Oops! Some errors occurred</h3><br />
+                    {% autoescape false %}
+                    {{errorString|replace("|", "<br/>")}}
+                    {% endautoescape %}
+                </div>
+                {% endif %}
+                <form action=" {{ url_for('customer', action='step1') -}}" method="post" autocomplete="off">
+                    <input type="hidden" name="submit" value="1" />
+
+
+
+                    <div class="form-row">
+                        <div class="form-group col-lg-4">
+                            <label for="nf-name" class=" form-control-label">Name</label>
+                            <input type="text" id="nf-name" name="name" placeholder="" required class="form-control">
+                        </div>
+                        <div class="form-group col-lg-4">
+                            <label for="nf-surname" class=" form-control-label">Surname</label>
+                            <input type="text" id="nf-surname" name="surname" placeholder="" required class="form-control">
+                        </div>
+                        <div class="form-group col-lg-4">
+                            <label for="nf-email" class=" form-control-label">Email</label>
+                            <input type="email" id="nf-email" name="email" placeholder="" required class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-lg-4">
+                            <label for="nf-type" class=" form-control-label">Type</label>
+                            <select name="type" id="nf-type" class="form-control-sm form-control">
+                                <option value="car">Car</option>
+                                <option value="moto">Moto</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-4">
+                            <label for="nf-model" class=" form-control-label">Model</label>
+                            <input type="text" id="nf-model" name="model" placeholder="" class="form-control">
+                        </div>
+                        <div class="form-group col-lg-4">
+                            <label for="nf-plate" class=" form-control-label">Plate</label>
+                            <input type="text" id="nf-plate" name="plate" placeholder="" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-row">
+
+                        <div class="form-group col-lg-6">
+                            <label for="nf-fromDate" class=" form-control-label">From Date</label>
+                            <input type="text" id="nf-fromDate" name="fromDate" placeholder="" required class="form-control">
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <label for="nf-toDate" class=" form-control-label">To Date</label>
+                            <input type="text" id="nf-toDate" name="toDate" placeholder="" required class="form-control">
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group col-lg-12">
+                            <label for="nf-parking" class=" form-control-label">Related Parking</label>
+                            <select name="parking" id="nf-parking" required class="form-control-sm form-control">
+
+                                {% for parks in parkingList %}
+                                <option value="{{ parks.id|string }}">{{ parks.name|e }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                     
+
+
+
+
+                    </div>
+
+
+
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="fa fa-dot-circle-o"></i> Submit
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+ {% endblock %}
+
+{% block scripts %}
+$(document).ready(function(){
+
+});
+{% endblock %}
