@@ -2,12 +2,12 @@
     <div class="header-mobile__bar">
         <div class="container-fluid">
             <div class="header-mobile-inner">
-                <a class="logo" href="index.html">
+                <a class="logo" href="#">
                     eParking System
                 </a>
-                <button class="hamburger hamburger--slider" type="button">
+                <button class="hamburger hamburger--slider" type="button" style = "background:#000;color:#fff">
                     <span class="hamburger-box">
-                        <span class="hamburger-inner"></span>
+                        |||
                     </span>
                 </button>
             </div>
@@ -17,6 +17,7 @@
         <div class="container-fluid">
             <ul class="navbar-mobile__list list-unstyled">
                 {% if userType == 'employee' -%}
+                <li>
                 <a href="{{ url_for('backoffice') }}">
                     <i class="fas fa-tachometer-alt"></i>Dashboard
                 </a>
@@ -24,6 +25,7 @@
                 <a href="{{ url_for('agency_panel') }}">
                     <i class="fas fa-tachometer-alt"></i>Dashboard
                 </a>
+                </li>
                 {% endif -%}
                 {% if userType == 'employee' and employee['superAdmin'] -%}
 
