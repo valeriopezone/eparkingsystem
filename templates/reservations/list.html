@@ -24,6 +24,61 @@
                             {{errorString|e}}
                         </div>
                         {% endif %}
+                        <div class="row m-t-25">
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="overview-item overview-item--c2">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix">
+                                            <div class="icon">
+                                                <i class="fas fa-book" style = "font-size: 33px;"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{ counters.reservations }}</h2>
+                                                <span>Reservations</span><br>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                             
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="overview-item overview-item--c4">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix">
+                                            <div class="icon">
+                                                <i class="fas fa-euro" style = "font-size: 33px;"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{ counters.earned }}</h2>
+                                                <span>Earned</span><br>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            {% if userType == 'employee' -%}
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="overview-item overview-item--c3">
+                                    <div class="overview__inner">
+                                        <div class="overview-box clearfix">
+                                            <div class="icon">
+                                                <i class="fas fa-book" style = "font-size: 33px;"></i>
+                                            </div>
+                                            <div class="text">
+                                                <h2>{{ counters.agencyProfit }}</h2>
+                                                <span>Agency Profit</span><br>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                           
+                            
+                        </div>
                         <div class="table-responsive table--no-card m-b-40">
                             <table class="table table-borderless table-data3">
                                 <thead>

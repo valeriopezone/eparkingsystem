@@ -26,7 +26,7 @@ app.config['MONGODB_SETTINGS'] = {
     'host': '127.0.0.1',
     'port': 27017
 }
-app.debug = True
+app.debug = False
 
 app.secret_key = '57048880436147513580'
 app.config['SESSION_TYPE'] = 'filesystem'

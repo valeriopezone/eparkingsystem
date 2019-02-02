@@ -32,6 +32,7 @@ def employeeReservationController(action=None,resourceId=None):
     pageTitle = ""
     reservationList = []
     agencyList = []
+    counters = {"reservations" : 0,"earned" : 0, "agencyProfit" : 0}
 
 
     #switch action cases (add,edit,delete,list)
@@ -277,6 +278,16 @@ def employeeReservationController(action=None,resourceId=None):
             }
         ])
 
+        #get counters value
+        counters['reservations'] = objectList.count()
+        counters['agencyProfit'] = objectList.sum("agencyProfit")
+        counters['earned'] = objectList.sum("amount")
+        
+
+        
+
+
+
         
 
 
@@ -296,5 +307,6 @@ def employeeReservationController(action=None,resourceId=None):
         reservationList=reservationList,
         reservationData=reservationData,
         action=action,
-        resourceId=resourceId
+        resourceId=resourceId,
+        counters=counters
         )
