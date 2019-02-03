@@ -16,24 +16,30 @@ from controllers.agencyReservationController import agencyReservationController
 
 from controllers.customerController import customerController
 
-# initialize instance of WSGI application
-# act as a central registry for the view functions, URL rules, template configs
 app = Flask(__name__,static_url_path='')
 
-## include db name in URI; _HOST entry overwrites all others
+################### CONFIGURATION
+
 app.config['MONGODB_SETTINGS'] = {
     'db': 'eparkingsystem',
     'host': '127.0.0.1',
     'port': 27017
 }
-app.debug = False
 
+app.config['SMTP_CONFIG'] = dict()
+app.config['SMTP_CONFIG']['HOST'] = ""
+app.config['SMTP_CONFIG']['PORT'] = 587
+app.config['SMTP_CONFIG']['SEND_FROM'] = ""
+app.config['SMTP_CONFIG']['LOGIN'] = ""
+app.config['SMTP_CONFIG']['PASSWORD'] = ""
+
+app.debug = False
 app.secret_key = '57048880436147513580'
 app.config['SESSION_TYPE'] = 'filesystem'
 
 
+#################
 
-# initalize app with database
 db.init_app(app)
 
 @app.route("/")
@@ -45,7 +51,7 @@ def index():
 
 @app.route("/backoffice")
 def backoffice():
-    return employeeReservationController()
+    return employeeReservationController(None,None,app.config)
 
 @app.route("/backoffice/auth", methods = ['GET','POST'])
 def backoffice_auth():
@@ -73,13 +79,13 @@ def employees(action=None,resourceId=None):
 @app.route("/backoffice/reservations/<string:action>/", methods = ['GET','POST'])
 @app.route("/backoffice/reservations/<string:action>/<string:resourceId>", methods = ['GET','POST'])
 def reservations(action=None,resourceId=None):
-    return employeeReservationController(action,resourceId)
+    return employeeReservationController(action,resourceId,app.config)
 
 
 #Agency panel routes
 @app.route("/agencyPanel")
 def agency_panel():
-    return agencyReservationController()
+    return agencyReservationController(None,None,app.config)
 
 @app.route("/agencyPanel/auth", methods = ['GET','POST'])
 def agency_auth():
@@ -89,14 +95,14 @@ def agency_auth():
 @app.route("/agencyPanel/reservations/<string:action>/", methods = ['GET','POST'])
 @app.route("/agencyPanel/reservations/<string:action>/<string:resourceId>", methods = ['GET','POST'])
 def agency_reservations(action=None,resourceId=None):
-    return agencyReservationController(action,resourceId)
+    return agencyReservationController(action,resourceId,app.config)
 
 #Customer routes
 
 @app.route("/customer", methods = ['GET','POST'])
 @app.route("/customer/<string:action>/", methods = ['GET','POST'])
 def customer(action=None):
-    return customerController(action)
+    return customerController(action,app.config)
 
 
 @app.route("/logout/<string:userType>")

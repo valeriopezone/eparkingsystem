@@ -18,12 +18,19 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h2 class="title-1 m-b-25">Parkings</h2>
+                        <div class="overview-wrap">
+                        <h2 class="title-1">Parkings</h2>
+                        {% if session['employee']['superAdmin'] -%}
+                        <button class="au-btn au-btn-icon au-btn--blue" onClick = "location.href='{{ url_for('parkings', action='add') -}}';">
+                                        <i class="zmdi zmdi-plus"></i>add parking</button>
+                        {% endif %}
+                    </div>
                         {% if errorString %}
                         <div class="alert alert-danger" role="alert">
                             {{errorString|e}}
                         </div>
                         {% endif %}
+                        <div class = "row m-t-25"></div>
                         <div class="table-responsive table--no-card m-b-40">
                             <table class="table table-borderless table-data3">
                                 <thead>

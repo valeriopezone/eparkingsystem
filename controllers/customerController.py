@@ -4,8 +4,12 @@ import hashlib
 from bson import ObjectId
 from datetime import datetime
 import decimal
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from html import unescape,escape
 
-def customerController(action="step1"):
+def customerController(action="step1",config = {}):
 
     parkingList = Parking.objects().order_by('companyName')
 
@@ -139,8 +143,8 @@ def customerController(action="step1"):
                                                  'plate' : plate,
                                                  'type' : type
                                              },
-                                             'fromDate':fromDate.isoformat(),
-                                             'toDate':toDate.isoformat(),
+                                             'fromDate':fromDate,
+                                             'toDate':toDate,
                                              'parking':str(relatedParking),
                                              'amount':float(amount),
                                              'paymentType':paymentType,
@@ -161,6 +165,7 @@ def customerController(action="step1"):
         action = "error"
         templatePath = "customer/done.html"
         if "reservation" in session:
+            executionDate = datetime.now()
             result = Reservation(status = "CONFIRMED",
                                              user= {
                                                  'name' : session['reservation']['user']['name'],
@@ -175,10 +180,38 @@ def customerController(action="step1"):
                                              parking=ObjectId(str(session['reservation']['parking'])),
                                              amount=session['reservation']['amount'],
                                              paymentType="online",
-                                             executionDate=datetime.now().isoformat()
+                                             executionDate=executionDate.isoformat()
                                              ).save()
             if result:
                 action = "success"
+                selectedParking = Parking.objects(id=ObjectId(str(session['reservation']['parking']))).first()
+                try:
+                    server = smtplib.SMTP(config['SMTP_CONFIG']['HOST'], config['SMTP_CONFIG']['PORT'])
+                    server.starttls()
+                    server.login(config['SMTP_CONFIG']['LOGIN'], config['SMTP_CONFIG']['PASSWORD'])
+                    to = str(session['reservation']['user']['email'])
+                    msg = MIMEMultipart()
+                    msg['From'] = config['SMTP_CONFIG']['SEND_FROM']
+                    msg['To'] = to
+                    msg['Subject'] = "Well done! Parking reservation confirm"
+                    body = "<p>Dear " + escape(session['reservation']['user']['name'] +  " " + session['reservation']['user']['surname']) + ",<br>this is your booking:<ul>\
+                            <li>Code : " + str(result.id) + "</li>\
+                            <li>Execution : " + executionDate.strftime('%d/%m/%Y %H:%M') + "</li>\
+                            <li>From : " + session['reservation']['fromDate'].strftime('%d/%m/%Y %H:%M') + "</li>\
+                            <li>To : " + session['reservation']['toDate'].strftime('%d/%m/%Y %H:%M') + "</li>\
+                            <li>Amount : &euro;" + str(session['reservation']['amount']) + "</li>\
+                            <li>Parking : " + escape(str(selectedParking.name)) + "</li>\
+                            <li>Parking Address : " + escape(str(selectedParking.address) + "," + str(selectedParking.city) + " " + str(selectedParking.district)) + "</li>\
+                            </ul><br><br>Best regards,<br><b>eparkingsystem</b></p>\
+                            "
+                    msg.attach(MIMEText(body, 'html'))
+                    text = msg.as_string()
+                    server.sendmail(config['SMTP_CONFIG']['SEND_FROM'], to,text)
+                    server.quit()        
+                except:
+                    pass
+
+                session.clear()
         
 
 

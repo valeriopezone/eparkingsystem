@@ -18,7 +18,16 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h2 class="title-1 m-b-25">Reservations</h2>
+                    <div class="overview-wrap">
+                        <h2 class="title-1">Reservations</h2>
+                        {% if userType == 'employee' -%}
+                        <button class="au-btn au-btn-icon au-btn--blue" onClick = "location.href='{{ url_for('reservations', action='add') -}}';">
+                                        <i class="zmdi zmdi-plus"></i>add reservation</button>
+                        {% elif userType == 'agency' -%}
+                        <button class="au-btn au-btn-icon au-btn--blue" onClick = "location.href='{{ url_for('agency_reservations', action='add') -}}';">
+                                        <i class="zmdi zmdi-plus"></i>add reservation</button>
+                        {% endif %}
+                    </div>
                         {% if errorString %}
                         <div class="alert alert-danger" role="alert">
                             {{errorString|e}}
@@ -64,7 +73,7 @@
                                     <div class="overview__inner">
                                         <div class="overview-box clearfix">
                                             <div class="icon">
-                                                <i class="fas fa-book" style = "font-size: 33px;"></i>
+                                                <i class="fas fa-euro" style = "font-size: 33px;"></i>
                                             </div>
                                             <div class="text">
                                                 <h2>{{ counters.agencyProfit }}</h2>
@@ -103,7 +112,7 @@
                                     {% for element in reservationList %}
                                     <tr>
                                         <td>{{ element.parkingName|e }}</td>
-                                        <td><i class="fa fa-arrow-right"></i> {{ element.fromDate.strftime('%d/%m/%Y %H:%M')  }} <br /><i class="fa fa-arrow-left"></i> {{ element.toDate.strftime('%d/%m/%Y %H:%M') }}</td>
+                                        <td><i class="fa fa-book"></i> {{ element.executionDate.strftime('%d/%m/%Y %H:%M')  }} <br /><i class="fa fa-arrow-right"></i> {{ element.fromDate.strftime('%d/%m/%Y %H:%M')  }} <br /><i class="fa fa-arrow-left"></i> {{ element.toDate.strftime('%d/%m/%Y %H:%M') }}</td>
 
                                         <td>{{ element.user.name|e }} {{ element.user.surname|e }}</td>
                                         <td>

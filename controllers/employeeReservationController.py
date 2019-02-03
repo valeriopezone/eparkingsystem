@@ -4,10 +4,15 @@ import hashlib
 from bson import ObjectId
 from datetime import datetime
 import decimal
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from html import unescape,escape
 
-def employeeReservationController(action=None,resourceId=None):
+def employeeReservationController(action=None,resourceId=None,config = {}):
 
     #keep non-logged users outside
+
 
     if ('employee' not in session):
         return redirect(url_for('backoffice_auth'))
@@ -175,6 +180,7 @@ def employeeReservationController(action=None,resourceId=None):
 
 
                 if action == 'add':
+                    executionDate = datetime.now()
                     result = Reservation(status = "CONFIRMED",
                                          user= {
                                              'name' : request.form['name'],
@@ -191,9 +197,40 @@ def employeeReservationController(action=None,resourceId=None):
                                          paymentType=paymentType,
                                          agencyProfit=agencyProfit,
                                          agency=relatedAgency,
-                                         executionDate=datetime.now().isoformat()
+                                         executionDate=executionDate.isoformat()
                                          ).save()
                     if result:
+
+                        #login
+
+                        try:
+                            server = smtplib.SMTP(config['SMTP_CONFIG']['HOST'], config['SMTP_CONFIG']['PORT'])
+                            server.starttls()
+                            server.login(config['SMTP_CONFIG']['LOGIN'], config['SMTP_CONFIG']['PASSWORD'])
+                            to = str(request.form['email'])
+                            msg = MIMEMultipart()
+                            msg['From'] = config['SMTP_CONFIG']['SEND_FROM']
+                            msg['To'] = to
+                            msg['Subject'] = "Well done! Parking reservation confirm"
+                            body = "<p>Dear " + escape(request.form['name'] +  " " + request.form['surname']) + ",<br>this is your booking:<ul>\
+                            <li>Code : " + str(result.id) + "</li>\
+                            <li>Execution : " + executionDate.strftime('%d/%m/%Y %H:%M') + "</li>\
+                            <li>From : " + fromDate.strftime('%d/%m/%Y %H:%M') + "</li>\
+                            <li>To : " + toDate.strftime('%d/%m/%Y %H:%M') + "</li>\
+                            <li>Amount : &euro;" + str(amount) + "</li>\
+                            <li>Parking : " + escape(str(selectedParking.name)) + "</li>\
+                            <li>Parking Address : " + escape(str(selectedParking.address) + "," + str(selectedParking.city) + " " + str(selectedParking.district)) + "</li>\
+                            </ul><br><br>Best regards,<br><b>eparkingsystem</b></p>\
+                            "
+                            msg.attach(MIMEText(body, 'html'))
+                            text = msg.as_string()
+                            server.sendmail(config['SMTP_CONFIG']['SEND_FROM'], to,text)
+                            server.quit()
+                        except:
+                            pass
+                                           
+
+
                         return redirect(url_for('reservations'))
                     else:
                         validationErrors.append("Unable to write this record")
@@ -228,13 +265,13 @@ def employeeReservationController(action=None,resourceId=None):
 
 
     elif action == 'delete':
-        Reservation.objects(id=ObjectId(str(resourceId))).update(status = "DECLINED")
+        Reservation.objects(id=ObjectId(str(resourceId))).delete()#update(status = "DECLINED")
         return redirect(url_for('reservations'))
 
     else:
         pageTitle = "Reservations"
         templatePath = 'reservations/list.html'
-        objectList = Reservation.objects(parking=session['employee']['relatedParking']['$oid']) if not session['employee']['superAdmin'] else Reservation.objects()
+        objectList = Reservation.objects(parking=session['employee']['relatedParking']['$oid']).order_by("-executionDate") if not session['employee']['superAdmin'] else Reservation.objects().order_by("-executionDate")
 
         reservationList = objectList.aggregate(*[
             {
